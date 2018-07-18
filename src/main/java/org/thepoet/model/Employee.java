@@ -1,6 +1,8 @@
 package org.thepoet.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -19,6 +21,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "employee")
+@ApiModel(description = "Employee class")
 public class Employee implements Serializable {
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -43,10 +46,11 @@ public class Employee implements Serializable {
     @Past(message = "Birth Date should a past date")
     private Date birthDay;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "employeeid")
     private Set<Hobby> hobbyList;
 
+    @ApiModelProperty(notes = "UUID formatted Employee ID")
     public String getId() {
         return id;
     }
@@ -55,6 +59,7 @@ public class Employee implements Serializable {
         this.id = id;
     }
 
+    @ApiModelProperty(notes = "Mail Address of an employee. You should provide a valid mail address", required = true, dataType = "String", example = "oguzhan@dogan.com")
     public String getMailAddress() {
         return mailAddress;
     }
@@ -63,6 +68,7 @@ public class Employee implements Serializable {
         this.mailAddress = mailAddress;
     }
 
+    @ApiModelProperty(notes = "Full name of the employee. You should provide both name and surname", required = true, dataType = "String", example = "Oguzhan Dogan")
     public String getFullName() {
         return fullName;
     }
@@ -71,6 +77,7 @@ public class Employee implements Serializable {
         this.fullName = fullName;
     }
 
+    @ApiModelProperty(notes = "Birth date of the employee. It should be formatted like YYYY-MM-DD and should be a past date", required = true, dataType = "String", example = "1986-08-27")
     public Date getBirthDay() {
         return birthDay;
     }
@@ -79,6 +86,7 @@ public class Employee implements Serializable {
         this.birthDay = birthDay;
     }
 
+    @ApiModelProperty(notes = "Hobby list of the employee. It should be sent as a JSON array", required = false, dataType = "Json Array")
     public Set<Hobby> getHobbyList() {
         return hobbyList;
     }

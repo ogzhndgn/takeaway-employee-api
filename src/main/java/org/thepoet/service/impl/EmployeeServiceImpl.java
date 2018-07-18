@@ -85,6 +85,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             existingEmployee.getHobbyList().addAll(employee.getHobbyList());
         }
         employeeDao.save(existingEmployee);
-        return existingEmployee;
+        return getEmployeeById(id);
     }
 }
