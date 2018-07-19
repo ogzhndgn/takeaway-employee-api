@@ -7,9 +7,11 @@ import org.thepoet.dao.EmployeeDao;
 import org.thepoet.enums.ErrorCode;
 import org.thepoet.exception.ServiceException;
 import org.thepoet.model.Employee;
+import org.thepoet.model.Hobby;
 import org.thepoet.service.spec.EmployeeService;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author the Poet <dogan_oguzhan@hotmail.com>
@@ -81,8 +83,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         existingEmployee.setMailAddress(employee.getMailAddress());
         existingEmployee.setFullName(employee.getFullName());
         existingEmployee.setBirthDay(employee.getBirthDay());
-        if (employee.getHobbyList() != null) {
-            existingEmployee.getHobbyList().addAll(employee.getHobbyList());
+        Set<Hobby> employeeHobbyList = employee.getHobbyList();
+        if (employeeHobbyList != null && employeeHobbyList.size() > 0) {
+            existingEmployee.setHobbyList(employeeHobbyList);
         }
         employeeDao.save(existingEmployee);
         return getEmployeeById(id);
