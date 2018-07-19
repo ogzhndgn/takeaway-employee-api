@@ -2,6 +2,7 @@ package org.thepoet.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -34,5 +35,14 @@ public class TakeawaySwaggerConfig extends WebMvcConfigurationSupport {
                 .description("This small API is built for takeaway.com's task challenge. It provides creating, updating, deleting and listing employee API calls.")//
                 .contact(new Contact("Oguzhan 'the Poet' Dogan", "https://github.com/ogzhndgn", "dogan_oguzhan@hotmail.com"))//
                 .build();
+    }
+
+    @Override
+    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }
