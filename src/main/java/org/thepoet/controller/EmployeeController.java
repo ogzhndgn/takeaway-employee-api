@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thepoet.model.Employee;
+import org.thepoet.rabbitmq.EventPublisher;
 import org.thepoet.service.spec.EmployeeService;
 import org.thepoet.util.TakeawayApiError;
 
@@ -24,6 +25,8 @@ import java.util.List;
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private EventPublisher eventPublisher;
 
     @RequestMapping(value = "/employee/", method = RequestMethod.GET)
     @ApiOperation(value = "List of all employees", nickname = "GetAllEmployees")
@@ -49,6 +52,7 @@ public class EmployeeController {
     public ResponseEntity<?> getEmployeeById(@PathVariable("id") String id) {
         try {
             Employee employee = employeeService.getEmployeeById(id);
+            eventPublisher.sendMessage("GET", employee.getId());
             return new ResponseEntity<>(employee, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new TakeawayApiError(e.getMessage()), HttpStatus.NO_CONTENT);
@@ -63,7 +67,8 @@ public class EmployeeController {
     })
     public ResponseEntity<?> createEmployee(@RequestBody Employee employee) {
         try {
-            employeeService.saveEmployee(employee);
+            Employee createdEmployee = employeeService.saveEmployee(employee);
+            eventPublisher.sendMessage("CREATE", createdEmployee.getId());
             return new ResponseEntity<>(employee, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new TakeawayApiError(e.getMessage()), HttpStatus.CONFLICT);
@@ -80,6 +85,7 @@ public class EmployeeController {
     public ResponseEntity<?> updateEmployee(@PathVariable("id") String id, @RequestBody Employee employee) {
         try {
             Employee updatedEmployee = employeeService.updateEmployee(id, employee);
+            eventPublisher.sendMessage("UPDATE", updatedEmployee.getId());
             return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new TakeawayApiError(e.getMessage()), HttpStatus.CONFLICT);
@@ -95,6 +101,7 @@ public class EmployeeController {
     public ResponseEntity<?> deleteById(@PathVariable("id") String id) {
         try {
             employeeService.deleteEmployeeById(id);
+            eventPublisher.sendMessage("DELETE", id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new TakeawayApiError(e.getMessage()), HttpStatus.NO_CONTENT);
