@@ -8,9 +8,18 @@ import java.util.Date;
  * @date 19.07.2018
  */
 public class Event implements Serializable {
+    private String eventId;
     private String employeeId;
     private String eventType;
-    private Date eventDateTime;
+    private Date publishedTime;
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
 
     public String getEmployeeId() {
         return employeeId;
@@ -28,11 +37,11 @@ public class Event implements Serializable {
         this.eventType = eventType;
     }
 
-    public Date getEventDateTime() {
-        return eventDateTime;
+    public Date getPublishedTime() {
+        return publishedTime;
     }
 
-    public void setEventDateTime(Date eventDateTime) {
-        this.eventDateTime = eventDateTime;
+    public void setPublishedTime(Date publishedTime) {
+        this.publishedTime = publishedTime;
     }
 }

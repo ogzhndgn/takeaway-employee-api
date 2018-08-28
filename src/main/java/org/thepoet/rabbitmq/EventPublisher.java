@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.thepoet.model.Event;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * @author the Poet <dogan_oguzhan@hotmail.com>
@@ -25,9 +26,10 @@ public class EventPublisher {
 
     public void sendMessage(String eventType, String employeeId) {
         Event event = new Event();
+        event.setEventId(UUID.randomUUID().toString());
         event.setEmployeeId(employeeId);
         event.setEventType(eventType);
-        event.setEventDateTime(new Date());
+        event.setPublishedTime(new Date());
         rabbitTemplate.convertAndSend(topicExchange.getName(), employeeId, event);
     }
 }
